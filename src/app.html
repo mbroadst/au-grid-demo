@@ -1,0 +1,12 @@
+<template>
+  <require from="grid"></require>
+  <require from="column"></require>
+
+  <button click.delegate="toggleHidden()">toggle column 1</button>
+
+  <grid rows.bind="rows">
+    <column header="view-model" view-model="first-template" visible.bind="showColumnOne"></column>
+    <column header="inline-view-strategy">${row.two}</column>
+    <column header="direct-binding" field="three"></column>
+  </grid>
+</template>
