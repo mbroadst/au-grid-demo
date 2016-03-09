@@ -2,9 +2,10 @@
   <require from="./grid/grid"></require>
   <require from="./grid/column"></require>
 
-  <grid rows.bind="people" class="table table-condensed table-bordered">
+  <grid view-model.ref="grid" rows.bind="people" class="table table-condensed table-bordered">
     <column header="index">${$index}</column>
-    <column header="first name">${firstName}</column>
-    <column header="last name">${lastName}</column>
+    <column header="first name">${row.firstName}</column>
+    <column header="last name">${row.lastName}</column>
+    <column header="value">${row.value}</column>
   </grid>
 </template>
