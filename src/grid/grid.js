@@ -1,12 +1,12 @@
 import {
   inject, bindable, children, createOverrideContext,
-  ViewSlot, ViewCompiler, ObserverLocator
+  Container, ViewSlot, ViewCompiler, ObserverLocator
 } from 'aurelia-framework';
 
 import {RepeatStrategyLocator} from '../binding/repeat-strategy-locator';
 import {AbstractRepeater} from '../binding/abstract-repeater';
 
-@inject(ViewSlot, ViewCompiler, ObserverLocator, RepeatStrategyLocator)
+@inject(Container, ViewSlot, ViewCompiler, ObserverLocator, RepeatStrategyLocator)
 export class Grid extends AbstractRepeater {
   @children('column') columns;
   @bindable rows;
@@ -14,12 +14,13 @@ export class Grid extends AbstractRepeater {
 
   columnViewFactories = [];
 
-  constructor(viewSlot, viewCompiler, observerLocator, strategyLocator) {
+  constructor(container, viewSlot, viewCompiler, observerLocator, strategyLocator) {
     super({
       local: 'row',
       viewsRequireLifecycle: true
     });
 
+    this.container = container;
     this.viewSlot = viewSlot;
     this.observerLocator = observerLocator;
     this.strategyLocator = strategyLocator;
@@ -52,8 +53,9 @@ export class Grid extends AbstractRepeater {
 
   // view related
   scrapeColumnViewFactories() {
-    for (let i = 0; i < this.columns.length; ++i)
+    for (let i = 0, ii = this.columns.length; i < ii; ++i) {
       this.columnViewFactories.push(this.columns[i].viewFactory);
+    }
   }
 
   renderHeaders() {
@@ -108,12 +110,12 @@ export class Grid extends AbstractRepeater {
     // console.log('addView(bctx= ', bindingContext, ')');
     let rowElement = document.createElement('tr');
     this.tbody.appendChild(rowElement);
-    let rowView = this.rowViewFactory.create();
+    let rowView = this.rowViewFactory.create(this.container);
     this.viewSlot.add(rowView);
     let rowViewSlot = new ViewSlot(rowElement, true);
     for (let x = 0, xx = this.columnViewFactories.length; x < xx; x++) {
       let cellViewFactory = this.columnViewFactories[x];
-      let cellView = cellViewFactory.create();
+      let cellView = cellViewFactory.create(this.container);
       rowViewSlot.add(cellView);
 
       let cellElement = document.createElement('td');
@@ -135,12 +137,12 @@ export class Grid extends AbstractRepeater {
       (!!this.rowViewSlots[index] && !!this.rowViewSlots[index].anchor) ?
       this.rowViewSlots[index].anchor : null;
     this.tbody.insertBefore(rowElement, existingElement);
-    let rowView = this.rowViewFactory.create();
+    let rowView = this.rowViewFactory.create(this.container);
     this.viewSlot.insert(index, rowView);
     let rowViewSlot = new ViewSlot(rowElement, true);
     for (let x = 0, xx = this.columnViewFactories.length; x < xx; x++) {
       let cellViewFactory = this.columnViewFactories[x];
-      let cellView = cellViewFactory.create();
+      let cellView = cellViewFactory.create(this.container);
       rowViewSlot.add(cellView);
 
       let cellElement = document.createElement('td');
