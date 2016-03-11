@@ -103,8 +103,6 @@ export class Grid extends AbstractRepeater {
     this.strategy.instanceMutated(this, collection, changes);
   }
 
-
-
   // @override AbstractRepeater
   addView(bindingContext, overrideContext) {
     // console.log('addView(bctx= ', bindingContext, ')');
@@ -159,11 +157,16 @@ export class Grid extends AbstractRepeater {
 
   removeAllViews() {
     // console.log('removeAllViews()');
-    let rowViewSlots = this.rowViewSlots;
-    for (let i = 0, ii = rowViewSlots.length; i < ii; ++i) {
-      removeView(i);
+    let length = this.rowViewSlots.length;
+    while (length--) {
+      let rowViewSlot = this.rowViewSlots.pop();
+      let anchor = rowViewSlot.anchor;
+      let parentNode = anchor.parentNode;
+      rowViewSlot.removeAll(true);
+      parentNode.removeChild(anchor);
     }
 
+    this.rowViewSlots = [];
     this.viewSlot.removeAll(true);
   }
 

@@ -1,0 +1,35 @@
+<template>
+  <require from="./grid/grid"></require>
+  <require from="./grid/column"></require>
+
+  <grid view-model.ref="grid" rows.bind="databases" class="table table-condensed table-bordered">
+    <column header="dbName">${row.dbname & oneTime}</column>
+
+    <column header="query-count">
+      <span class.bind="row.lastSample.countClassName">
+        ${row.lastSample.nbQueries & oneTime}
+      </span>
+    </column>
+
+    <column header="1">
+      ${row.lastSample.topFiveQueries[0].formatElapsed & oneTime}
+    </column>
+
+    <column header="2">
+      ${row.lastSample.topFiveQueries[1].formatElapsed & oneTime}
+    </column>
+
+    <column header="3">
+      ${row.lastSample.topFiveQueries[2].formatElapsed & oneTime}
+    </column>
+
+    <column header="4">
+      ${row.lastSample.topFiveQueries[3].formatElapsed & oneTime}
+    </column>
+
+      <column header="5">
+      ${row.lastSample.topFiveQueries[4].formatElapsed & oneTime}
+    </column>
+
+  </grid>
+</template>

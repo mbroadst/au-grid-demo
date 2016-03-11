@@ -1,0 +1,14 @@
+<template>
+  <require from="../grid/grid"></require>
+  <require from="../grid/column"></require>
+
+  <grid view-model.ref="grid" rows.bind="people" class="table table-condensed table-bordered">
+    <column header="first name">
+      <compose view="first-name-view.html"></compose>
+    </column>
+    <column header="last name">
+      <compose view-model="last-name" model.bind="row"></compose>
+    </column>
+    <column header="value">${row.value}</column>
+  </grid>
+</template>
