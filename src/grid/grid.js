@@ -1,10 +1,11 @@
 import {
-  inject, bindable, children, createOverrideContext,
+  inject, bindable, children,
   Container, ViewSlot, ViewCompiler, ObserverLocator
 } from 'aurelia-framework';
 
 import {RepeatStrategyLocator} from '../binding/repeat-strategy-locator';
 import {AbstractRepeater} from '../binding/abstract-repeater';
+import {updateOneTimeBinding} from '../binding/repeat-utilities';
 
 @inject(Container, ViewSlot, ViewCompiler, ObserverLocator, RepeatStrategyLocator)
 export class Grid extends AbstractRepeater {
@@ -17,7 +18,7 @@ export class Grid extends AbstractRepeater {
   constructor(container, viewSlot, viewCompiler, observerLocator, strategyLocator) {
     super({
       local: 'row',
-      viewsRequireLifecycle: true
+      viewsRequireLifecycle: false
     });
 
     this.container = container;
@@ -104,8 +105,12 @@ export class Grid extends AbstractRepeater {
   }
 
   // @override AbstractRepeater
+  views() { return this.rowViewSlots; }
+  view(index) { return this.rowViewSlots[index]; }
+  viewCount() { return this.rowViewSlots.length; }
+
   addView(bindingContext, overrideContext) {
-    // console.log('addView(bctx= ', bindingContext, ')');
+    console.log('addView(bctx= ', bindingContext, ')');
     let rowElement = document.createElement('tr');
     this.tbody.appendChild(rowElement);
     let rowView = this.rowViewFactory.create(this.container);
@@ -129,7 +134,7 @@ export class Grid extends AbstractRepeater {
   }
 
   insertView(index, bindingContext, overrideContext) {
-    // console.log('insertView(index=', index, ', bctx= ', bindingContext, ')');
+    console.log('insertView(index=', index, ', bctx= ', bindingContext, ')');
     let rowElement = document.createElement('tr');
     let existingElement =
       (!!this.rowViewSlots[index] && !!this.rowViewSlots[index].anchor) ?
@@ -156,7 +161,7 @@ export class Grid extends AbstractRepeater {
   }
 
   removeAllViews() {
-    // console.log('removeAllViews()');
+    console.log('removeAllViews()');
     let length = this.rowViewSlots.length;
     while (length--) {
       let rowViewSlot = this.rowViewSlots.pop();
@@ -171,7 +176,7 @@ export class Grid extends AbstractRepeater {
   }
 
   removeView(index) {
-    // console.log('removeView(index=', index, ')');
+    console.log('removeView(index=', index, ')');
     let rowViewSlots = this.rowViewSlots;
     let anchor = rowViewSlots[index].anchor;
     let parentNode = anchor.parentNode;
@@ -181,7 +186,22 @@ export class Grid extends AbstractRepeater {
     this.viewSlot.removeAt(index, true);
   }
 
-  views() { return this.rowViewSlots; }
-  view(index) { return this.rowViewSlots.children[index]; }
-  viewCount() { return this.rowViewSlots.children.length; }
+  updateBindings(view) {
+    console.log('updateBindings(view=', view, ')');
+    let i = view.children.length;
+    while (i--) {
+      let j = view.children[i].bindings.length;
+      while (j--) updateOneTimeBinding(view.children[i].bindings[j]);
+
+      j = view.children[i].controllers.length;
+      while (j--) {
+        let k = view.children[i].controllers[j].boundProperties.length;
+        while (k--) {
+          let binding =
+            view.children[i].controllers[j].boundProperties[k].binding;
+          updateOneTimeBinding(binding);
+        }
+      }
+    }
+  }
 }

@@ -3,12 +3,17 @@
   <require from="../grid/column"></require>
 
   <grid view-model.ref="grid" rows.bind="people" class="table table-condensed table-bordered">
-    <column header="first name">
+    <column header="first name">${row.firstName}</column>
+    <column header="last name">${row.lastName}</column>
+    <column header="value">${row.value}</column>
+
+
+    <!--<column header="first name">
       <compose view="first-name-view.html"></compose>
     </column>
     <column header="last name">
       <compose view-model="last-name" model.bind="row"></compose>
     </column>
-    <column header="value">${row.value}</column>
+    <column header="value">${row.value}</column>-->
   </grid>
 </template>
