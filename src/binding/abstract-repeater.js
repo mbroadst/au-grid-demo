@@ -37,4 +37,7 @@ export class AbstractRepeater {
     throw new Error('subclass must implement this method');
   }
 
+  updateBindings(view) {
+    throw new Error('subclass must implement this method');
+  }
 }
