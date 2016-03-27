@@ -7,7 +7,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var paths = require('../paths');
 var compilerOptions = require('../babel-options');
 var assign = Object.assign || require('object.assign');
-var notify = require("gulp-notify");
+var notify = require('gulp-notify');
 var browserSync = require('browser-sync');
 
 // transpiles changed es6 files to SystemJS format
@@ -19,8 +19,8 @@ gulp.task('build-system', function() {
     .pipe(plumber({errorHandler: notify.onError('Error: <%= error.message %>')}))
     .pipe(changed(paths.output, {extension: '.js'}))
     .pipe(sourcemaps.init({loadMaps: true}))
-    .pipe(to5(assign({}, compilerOptions, {modules: 'system'})))
-    .pipe(sourcemaps.write({includeContent: true}))
+    .pipe(to5(assign({}, compilerOptions.system())))
+    .pipe(sourcemaps.write({includeContent: false, sourceRoot: '/src'}))
     .pipe(gulp.dest(paths.output));
 });
 
