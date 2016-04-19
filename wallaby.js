@@ -1,53 +1,37 @@
 /* eslint-disable no-var, no-shadow, dot-notation */
+var wallabyWebpack = require('wallaby-webpack');
+var wallabyPostprocessor = wallabyWebpack({
+  module: {
+    loaders: [
+      { test: /\.js$/, loader: 'babel', exclude: /node_modules/, query: { presets: ['es2015-loose', 'stage-1'], plugins: ['transform-decorators-legacy'] } },
+    ]
+  },
+});
 
 module.exports = function(wallaby) {
   return {
     files: [
-
-      {pattern: 'jspm_packages/system.js', instrument: false},
-      {pattern: 'config.js', instrument: false},
-
-      {pattern: 'src/**/*.js', load: false},
-      {pattern: 'test/unit/setup.js', load: false}
-
+      { pattern: 'src/**/*.js', load: false },
+      { pattern: 'test/unit/setup.js', load: false }
     ],
 
     tests: [
-      {pattern: 'test/unit/**/*.spec.js', load: false}
+      { pattern: 'test/unit/**/*.spec.js', load: false }
     ],
 
     compilers: {
-      '**/*.js': wallaby.compilers.babel({
-        optional: [
-          'es7.decorators',
-          'es7.classProperties'
+      'src/**/*.js': wallaby.compilers.babel({
+        presets: [ 'es2015-loose', 'stage-1'],
+        plugins: [
+          'transform-decorators-legacy'
         ]
       })
     },
 
-    middleware: (app, express) => {
-      app.use('/jspm_packages', express.static(require('path').join(__dirname, 'jspm_packages')));
-    },
+    postprocessor: wallabyPostprocessor,
 
-    bootstrap: function(wallaby) {
-      var promises = [];
-      var i = 0;
-      var len = wallaby.tests.length;
-
-      wallaby.delayStart();
-
-      System.config({
-        paths: {
-          '*': '*.js'
-        }
-      });
-      for (; i < len; i++) {
-        promises.push(System['import'](wallaby.tests[i].replace(/\.js$/, '')));
-      }
-
-      Promise.all(promises).then(function() {
-        wallaby.start();
-      }).catch(function (e) { setTimeout(function (){ throw e; }, 0); });
+    setup: function() {
+      window.__moduleBundler.loadTests();
     },
 
     debug: false

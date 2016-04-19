@@ -1,8 +1,8 @@
 export class App {
   configureRouter(config, router) {
-    config.title = 'grid-component';
+    config.title = 'au-grid-demo';
     config.map([
-      { route: ['', 'test'],    name: 'test',         moduleId: './test/test',  nav: true, title: 'test' },
+      { route: ['', 'demo'],    name: 'demo',         moduleId: './demo/demo',  nav: true, title: 'demo' },
       { route: 'dbMonster',     name: 'dbMonster',    moduleId: 'db-monster',   nav: true, title: 'dbMonster' }
     ]);
 
