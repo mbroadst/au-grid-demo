@@ -3,7 +3,7 @@
  * @author jetienne / http://jetienne.com/
  * @author paulirish / http://paulirish.com/
  */
-var MemoryStats = function (){
+export var MemoryStats = function (){
 
 	var msMin	= 100;
 	var msMax	= 0;

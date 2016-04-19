@@ -1,4 +1,4 @@
-var ENV = ENV || (function() {
+export var ENV = ENV || (function() {
 
   var first = true;
   var counter = 0;
@@ -9,7 +9,7 @@ var ENV = ENV || (function() {
   });
 
   function formatElapsed(value) {
-    str = parseFloat(value).toFixed(2);
+    var str = parseFloat(value).toFixed(2);
     if (value > 60) {
       minutes = Math.floor(value / 60);
       comps = (value % 60).toFixed(2).split('.');

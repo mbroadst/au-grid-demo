@@ -1,4 +1,6 @@
-var Monitoring = Monitoring || (function() {
+import {MemoryStats} from './memory-stats';
+
+export var Monitoring = Monitoring || (function() {
 
   var stats = new MemoryStats();
   stats.domElement.style.position = 'fixed';
@@ -58,3 +60,4 @@ var Monitoring = Monitoring || (function() {
   };
 
 })();
+
