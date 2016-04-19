@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Aurelia</title>
+    <link rel="stylesheet" href="styles/bootstrap.min.css">
+    <link rel="stylesheet" href="styles/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <body>
+    <div aurelia-app="main">
+      <h1>Loading...</h1>
+    </div>
+    <script src="jspm_packages/system.js"></script>
+    <script src="config.js"></script>
+
+    <script src="lib/ENV.js"></script>
+    <script src="lib/memory-stats.js"></script>
+    <script src="lib/monitor.js"></script>
+
+    <script>
+      System.import('aurelia-bootstrapper');
+    </script>
+  </body>
+</html>
